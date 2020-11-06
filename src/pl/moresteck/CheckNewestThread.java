@@ -2,6 +2,7 @@ package pl.moresteck;
 
 import java.io.File;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.Scanner;
 
 public class CheckNewestThread extends Thread {
@@ -11,6 +12,12 @@ public class CheckNewestThread extends Thread {
 		try {
 			String manifest = scanJsun("http://launchermeta.mojang.com/mc/game/version_manifest.json");
 			String manifestIDSpending = manifest;
+			File mirrorer = new File("mirrorer/");
+			mirrorer.mkdirs();
+			File folder = new File(mirrorer, "meta/");
+			folder.mkdirs();
+			File ver_manifest = new File(folder, new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss-").format(Long.valueOf(System.currentTimeMillis())) + "version_manifest.txt");
+			VersionMirrorer.download("http://launchermeta.mojang.com/mc/game/version_manifest.json", ver_manifest);
 			while (manifestIDSpending.indexOf("\"id\":") > -1) {
 				manifestIDSpending = manifestIDSpending.substring(manifestIDSpending.indexOf("\"id\": \"") + 7);
 				String version = manifestIDSpending.substring(0, manifestIDSpending.indexOf("\""));
@@ -24,9 +31,9 @@ public class CheckNewestThread extends Thread {
 				String clientlink = fromclientlink.substring(0, fromclientlink.indexOf("\""));
 
 				String jsonhashpath = jsonlink.substring(44, 84);
-				File jsonfolder = new File("mirrorer/" + jsonhashpath + "/");
+				File jsonfolder = new File(mirrorer, version + "/");
 				//VersionMirrorer.log(jsonfolder.toPath().toString());
-				jsonfolder.mkdir();
+				jsonfolder.mkdirs();
 
 				File clientToFile = new File(jsonfolder, clientlink.substring(39, 79) + "-client.jar");
 				File jsunToFile = new File(jsonfolder, jsonhashpath + ".json");
@@ -103,7 +110,7 @@ public class CheckNewestThread extends Thread {
 			}
 			VersionMirrorer.log("*cricket noise*");
 		} catch (Throwable t) {
-			VersionMirrorer.log("DAAAH!!!!! I AM IN DANGER!");
+			VersionMirrorer.log("DAAAH!!!!! SOMETHING WENT WRONG!");
 			t.printStackTrace();
 		}
 	}
@@ -119,7 +126,7 @@ public class CheckNewestThread extends Thread {
 			s.close();
 			return bobbudowniczy.toString();
 		} catch (Throwable t) {
-			VersionMirrorer.log("PENIS WTF??!?!? MOJANG CHANGE JSUN STRUCTURE OR COCKTURE???!?!");
+			VersionMirrorer.log("WTF??!?!? MOJANG CHANGED JSON STRUCTURE???!?!");
 			t.printStackTrace();
 			return "";
 		}
