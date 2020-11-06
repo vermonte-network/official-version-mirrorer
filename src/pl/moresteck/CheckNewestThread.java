@@ -23,8 +23,8 @@ public class CheckNewestThread extends Thread {
 				String fromclientlink = jsunfromclient.substring(jsunfromclient.indexOf("\"url\": \"") + 8);
 				String clientlink = fromclientlink.substring(0, fromclientlink.indexOf("\""));
 
-				String jsonhashpath = "mirrorer/" + jsonlink.substring(44, 85);
-				File jsonfolder = new File(jsonhashpath);
+				String jsonhashpath = jsonlink.substring(44, 84);
+				File jsonfolder = new File("mirrorer/" + jsonhashpath + "/");
 				//VersionMirrorer.log(jsonfolder.toPath().toString());
 				jsonfolder.mkdir();
 
